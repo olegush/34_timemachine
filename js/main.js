@@ -87,13 +87,14 @@ function main() {
     var timer = new Timer(TIMEOUT_IN_SECS)
     var timerWiget = new TimerWidget()
     var intervalId = null
-
     timerWiget.mount(document.body)
+
 
     function handleIntervalTick() {
         var secsLeft = timer.calculateSecsLeft()
         timerWiget.update(secsLeft)
     }
+
 
     function handleVisibilityChange() {
         if (document.hidden) {
@@ -108,22 +109,23 @@ function main() {
 
 
 
-    function messages() {
+    function check_timer() {
+        if (timer.calculateSecsLeft() == 0) {
+            clearInterval(intervalIdCheck)
+            alert_messages()
+        }
+    }
+
+
+
+    function alert_messages() {
         var timer_msg = new Timer(TIMEOUT_MESSAGES_IN_SECS)
         var intervalIdmsg = null
         var messages = ['Ну наконец-то пришла пора поработать!', 'Хабр прекрасен, спору нет, но работа стоит', 'И вот твой таймер-друг напоминает о необходимости переключиться с потребления на созидание', 'Эти нули в углу своей как бы намекают о том, что ... ', 'Уверен, что не прокрастинируешь? Или нет? В любом случае только ты знаешь, что делать.', 'Ты кнопку OK нажми, а потом "Закрыть вкладку" и пусть не отвлекает тебя ничего больше от дела', 'Хоть работа в лес не убежит, а волка-то ноги кормят.'];
 
+
         function handleIntervalTickMsg() {
             var secsLeftMsg = timer_msg.calculateSecsLeft()
-
-            if (timer.calculateSecsLeft() > 0) {
-                timer_msg.stop()
-            } else {
-                timer_msg.start()
-
-            }
-
-
             if (secsLeftMsg === 0) {
                 alert(messages[Math.floor(Math.random() * messages.length)])
                 timer_msg.reset(TIMEOUT_MESSAGES_IN_SECS)
@@ -131,6 +133,7 @@ function main() {
             }
 
         }
+
 
         function handleVisibilityChangeMsg() {
             if (document.hidden) {
@@ -143,17 +146,18 @@ function main() {
             }
         }
 
+
         document.addEventListener("visibilitychange", handleVisibilityChangeMsg, false);
         handleVisibilityChangeMsg()
-
     }
-    // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+
+
     document.addEventListener("visibilitychange", handleVisibilityChange, false);
     handleVisibilityChange()
-    messages()
+    intervalIdCheck = setInterval(check_timer, 300)
+
 
 }
-
 
 
 
